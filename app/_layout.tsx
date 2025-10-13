@@ -3,9 +3,9 @@ import { User } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../scripts/AuthContext";
 import { GetUserData } from "../scripts/UserService.js";
-import Index from "./index";
-import Login from "./login";
-import SignUp from "./signUp";
+import Index from "./Index";
+import Login from "./Login";
+import SignUp from "./SignUp";
 
 import IndexHeader from "@/components/IndexHeader";
 import { queryClient } from "@/lib/queryClient";

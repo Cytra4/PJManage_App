@@ -5,7 +5,7 @@ import { supabase } from "./client";
 type FetchOptions = {
 	select?: string;
 	limit?: number;
-	filter?: Record<string, string | number>;
+	filter?: Record<string, string | number | undefined | string[]>;
 	order?: { column: string; ascending?: boolean }[];
 	search?: { column: string; value: string | number };
 };
@@ -15,13 +15,18 @@ export function useFetch<T>(
 	options: FetchOptions = { select: "*" }
 ) {
 	return useQuery<T[], Error>({
-		queryKey: ["fetch", table],
+		queryKey: ["fetch", table, options],
 		queryFn: async () => {
 			let query = supabase.from(table).select(options.select);
 
 			if (options.filter) {
 				for (const [key, value] of Object.entries(options.filter)) {
-					query = query.eq(key, value);
+					if (Array.isArray(value)){
+						query = query.in(key, value);
+					}
+					else{
+						query = query.eq(key, value);
+					}
 				}
 			}
 

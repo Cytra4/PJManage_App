@@ -14,3 +14,10 @@ export type Group = {
 	created_by?: string | null;
 	created_at: Date;
 };
+
+export type Group_Member = {
+	id: string;
+	group_id: string;
+	user_id: string;
+	joined_at: Date;
+}
