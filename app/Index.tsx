@@ -6,6 +6,7 @@ import { useFetch, useInsert } from '@/lib/supabase/query';
 import { useAuth } from '@/scripts/AuthContext';
 import { wp } from '@/scripts/constants';
 import { Group, Group_Member } from '@/types/supabase';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 
@@ -19,6 +20,8 @@ export default function Index() {
 	const { data: groups } = useFetch<Group>('groups', {
 		order: [{ column: 'created_at', ascending: false }]
 	});
+
+	const router = useRouter();
 
 	//取得使用者在的小組的ID
 	const { data: group_member } = useFetch<Group_Member>('group_members', {
@@ -77,6 +80,14 @@ export default function Index() {
 						member_counts={item.member_count}
 						created_at={new Date(item.created_at)}
 						headerColor={GenColorFromName(item.name)}
+						onPress={() => {
+							console.log("Entering Group");
+							router.push({
+								pathname: '/(tabs)/calendar',
+								params: { id: item.id },
+							})
+						}
+						}
 					/>
 				)}
 			/>

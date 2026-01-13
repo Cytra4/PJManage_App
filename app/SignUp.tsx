@@ -99,7 +99,7 @@ export default function SignUp() {
 					<View style={{ flexDirection: "row" }}>
 						<Text style={styles.switchText}>已經有帳號了？</Text>
 						<Text
-							onPress={() => router.push("/login")}
+							onPress={() => router.replace("/login")}
 							style={[styles.switchText, { fontWeight: "bold", color: "coral" }]}
 						>
 							登入帳號

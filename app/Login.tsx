@@ -77,7 +77,7 @@ export default function Login() {
 					<View style={{ flexDirection: "row" }}>
 						<Text style={styles.switchText}>還沒有帳號？</Text>
 						<Pressable
-							onPress={() => router.push("/signUp")}
+							onPress={() => router.replace("/signUp")}
 						>
 							<Text
 								style={[styles.switchText, { fontWeight: "bold", color: "coral" }]}

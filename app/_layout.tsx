@@ -1,76 +1,76 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { User } from "@supabase/supabase-js";
-import { useEffect } from "react";
-import { AuthProvider, useAuth } from "../scripts/AuthContext";
-import { GetUserData } from "../scripts/UserService.js";
-import Index from "./Index";
-import Login from "./Login";
-import SignUp from "./SignUp";
-
 import IndexHeader from "@/components/IndexHeader";
 import { queryClient } from "@/lib/queryClient";
 import { supabase } from "@/lib/supabase/client";
 import { QueryClientProvider } from '@tanstack/react-query';
+import { Stack, useRouter } from 'expo-router';
+import React, { useEffect, useState } from "react";
+import { AuthProvider, useAuth } from "../scripts/AuthContext";
 
-const Stack = createNativeStackNavigator();
-
-export default function _layout() {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<AuthProvider>
-				<RootLayout />
-			</AuthProvider>
-		</QueryClientProvider>
-	)
+export default function Layout() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RootLayout />
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }
 
 function RootLayout() {
-	const { user, setAuth, setUserData } = useAuth();
+  const { user, setAuth, setUserData } = useAuth();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
-	//*useEffect((),[]) -> Only trigger once
-	useEffect(() => {
-		supabase.auth.onAuthStateChange((_event, session) => {
-			//console.log(`User: ${session?.user?.user_metadata?.name}`);
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setAuth(session?.user ?? null);
+      }
+    );
 
-			//Set user when login success
-			if (session) {
-				setAuth(session?.user);
-				updateUserData(session?.user);
-			}
-			else {
-				setAuth(null);
-			}
-		})
-	}, []);
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
-	async function updateUserData(user: User) {
-		let res = await GetUserData(user?.id);
-		if (res.success) {
-			setUserData(res.data);
-		}
-	}
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			{/* Take user to index page when login success */}
-			{user ?
-				<Stack.Screen
-					name="index"
-					component={Index}
-					options={{
-						headerShown: true,
-						headerTitleAlign: "center",
-						headerTitle: "你的小組",
-						headerRight: () => <IndexHeader />
-					}}
-				/>
-				: (
-					<>
-						<Stack.Screen name="login" component={Login} />
-						<Stack.Screen name="signUp" component={SignUp} />
-					</>
-				)
-			}
-		</Stack.Navigator>
-	)
+  useEffect(() => {
+    if (!mounted) return;
+
+    if (user) {
+      router.replace('/');        // 進入 index（tabs 外或內都可）
+    } else {
+      router.replace('/login');
+    }
+  }, [user, mounted]);
+
+  return (
+    <Stack>
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: true,
+          headerTitle: "你的小組",
+          headerTitleAlign: "center",
+		  headerRight: () => <IndexHeader />
+        }}
+      />
+
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="login"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="signUp"
+        options={{ headerShown: false }}
+      />
+    </Stack>
+  );
 }

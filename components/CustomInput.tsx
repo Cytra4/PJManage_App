@@ -47,6 +47,9 @@ export default function CustomInput({
 				onChangeText={onChange}
 				keyboardType={keyboardType}
 				secureTextEntry={secureText}
+				autoCorrect = {false}
+  				autoCapitalize = "none"
+  				returnKeyType = "done"
 			/>
 		</View>
 	)

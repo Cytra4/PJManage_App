@@ -6,12 +6,15 @@ export function GroupCard({
 	group_name = "AAA",
 	member_counts = 0,
 	headerColor = "coral",
-	created_at = new Date()
+	created_at = new Date(),
+	onPress = () => {}
 }) {
 	const formattedDate = created_at.toISOString().split("T")[0];
 
 	return (
-		<TouchableOpacity style={styles.card}>
+		<TouchableOpacity style={styles.card}
+			onPress={onPress}
+		>
 			<View style={[styles.header, { backgroundColor: headerColor }]} />
 
 			<View style={styles.content}>
