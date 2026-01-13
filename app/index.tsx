@@ -81,11 +81,10 @@ export default function Index() {
 						created_at={new Date(item.created_at)}
 						headerColor={GenColorFromName(item.name)}
 						onPress={() => {
-							console.log("Entering Group");
-							router.push({
-								pathname: '/(tabs)/calendar',
-								params: { id: item.id },
-							})
+							router.replace({
+								pathname: '/groups/[groupId]/calendar',
+								params: { groupId: item.id },
+							});
 						}
 						}
 					/>
