@@ -65,7 +65,7 @@ export default function JoinGroup() {
 
 							<TextInput
 								style={[styles.input, error ? styles.errorInput : {}]}
-								placeholder="輸入小組代碼"
+								placeholder="請輸入小組代碼"
 								value={code}
 								onChangeText={setCode}
 							/>
