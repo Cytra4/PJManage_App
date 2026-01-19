@@ -1,10 +1,23 @@
 import { hp, wp } from '@/scripts/constants';
-import { Picker } from '@react-native-picker/picker';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { CalendarList, LocaleConfig } from 'react-native-calendars';
 
-export default function Calendar() {
+LocaleConfig.locales['ch'] = {
+	monthNames: [
+		'一月', '二月', '三月',
+		'四月', '五月', '六月',
+		'七月', '八月', '九月',
+		'十月', '十一月', '十二月'
+	],
+	dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+	dayNamesShort: ['日', '一', '二', '三', '四', '五', '六']
+};
+
+LocaleConfig.defaultLocale = 'ch';
+
+export default function GroupCalendar() {
 	const { groupId } = useGlobalSearchParams<{ groupId: string }>();
 	const router = useRouter();
 
@@ -15,51 +28,19 @@ export default function Calendar() {
 
 	return (
 		<View style={styles.container}>
-			<Text>{groupId}</Text>
-			<Text>時間表</Text>
-
-			<View style={{flexDirection: "row"}}>
-				<View style={[styles.pickerContainer, {width: wp(30)}]}>
-					<Picker
-						style={styles.picker}
-						itemStyle={{ color: "blue" }}
-						selectedValue={selectedYear}
-						onValueChange={(itemValue, itemIndex) =>
-							setSelectedYear(itemValue)
-						}>
-						{Array.from({ length: 10 }, (_, i) => {
-							const year = (currentYear - 5 ) + i;
-							return (
-								<Picker.Item
-									key={year}
-									label={`${year}年`}
-									value={year}
-								/>
-							);
-						})}
-					</Picker>
-				</View>
-				<View style={styles.pickerContainer}>
-					<Picker
-						style={styles.picker}
-						itemStyle={{ color: "blue" }}
-						selectedValue={selectedMonth}
-						onValueChange={(itemValue, itemIndex) =>
-							setSelectedMonth(itemValue)
-						}>
-						{Array.from({ length: 12 }, (_, i) => {
-							const month = i + 1;
-							return (
-								<Picker.Item
-									key={month}
-									label={`${month}月`}
-									value={month}
-								/>
-							);
-						})}
-					</Picker>
-				</View>
-			</View>
+			<CalendarList
+				pastScrollRange={12}
+				futureScrollRange={12}
+				monthFormat={'yyyy年 M月'}
+				onDayPress={day => {
+					console.log('selected day', day);
+				}}
+				theme={{
+					textDayFontSize: 20,
+					textMonthFontSize: 18,
+					textDayHeaderFontSize: 20
+				}}
+			/>
 		</View>
 	)
 }
@@ -67,8 +48,10 @@ export default function Calendar() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: "center",
-		alignItems: "center"
+	},
+	calendar: {
+		height: "100%",
+		width: "100%"
 	},
 	pickerContainer: {
 		height: hp(6),
