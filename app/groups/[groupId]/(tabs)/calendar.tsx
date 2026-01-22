@@ -32,13 +32,14 @@ export default function GroupCalendar() {
 				pastScrollRange={12}
 				futureScrollRange={12}
 				monthFormat={'yyyy年 M月'}
+				enableSwipeMonths={true}
 				onDayPress={day => {
 					console.log('selected day', day);
 				}}
 				theme={{
 					textDayFontSize: 20,
 					textMonthFontSize: 18,
-					textDayHeaderFontSize: 20
+					textDayHeaderFontSize: 20,
 				}}
 			/>
 		</View>
