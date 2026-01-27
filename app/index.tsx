@@ -17,10 +17,10 @@ export default function Index() {
 	const { data: profile } = useProfile();
 
 	const insertMutation = useInsert();
-	const { data: groups } = useFetch<Group>('groups', {
-		order: [{ column: 'created_at', ascending: false }]
-	});
-
+	// const { data: groups } = useFetch<Group>('groups', {
+	// 	order: [{ column: 'created_at', ascending: false }]
+	// });
+	
 	const router = useRouter();
 
 	//取得使用者在的小組的ID
