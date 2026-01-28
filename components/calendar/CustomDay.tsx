@@ -46,8 +46,12 @@ export default function CustomDay(
 	);
 
 	const visibleTasks = filledTasks.slice(0, MAX_VISIBLE);
-	const actualTaskCount = tasks.length;
-	const plusN = Math.max(0, actualTaskCount - MAX_VISIBLE);
+	const maxUsedRow =
+		tasks.length > 0
+			? Math.max(...tasks.map(t => t.rowIndex)) + 1
+			: 0;
+
+	const plusN = Math.max(0, maxUsedRow - MAX_VISIBLE);
 
 	return (
 		<Pressable onPress={onDayPress} style={styles.container}>
@@ -64,8 +68,14 @@ export default function CustomDay(
 
 			{/* 顯示任務 */}
 			{visibleTasks.map((t, i) => {
+				// 沒有任務的話回傳空格
 				if (!t) {
 					return <View key={i} style={styles.taskRow} />;
+				}
+
+				// 日期取得有問題的話結束
+				if (!date?.dateString) {
+					return;
 				}
 
 				const dateObj = new Date(date?.dateString);
